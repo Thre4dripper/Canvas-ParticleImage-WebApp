@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .disable {
+        @apply pointer-events-none opacity-50;
+    }
+
+    .shadows {
+        @apply shadow-lg shadow-black/60;
+    }
+
+}
+
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        border-radius: 100vh;
+        background:transparent;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        background: rgb(55, 65, 81);
+        border-radius: 100vh;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgb(31, 41, 55);
+    }
+}

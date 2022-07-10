@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/public/css/style.css">
+    <title>Canvas Particle Image</title>
+    <link rel="icon" type="image/x-icon" href="/public/images/favicon.svg">
+    <script src="https://kit.fontawesome.com/643e1e523e.js" crossorigin="anonymous"></script>
+</head>
+<body class="overflow-hidden">
+<div id="show-controls-button" class="mx-5 mt-5 flex justify-end absolute hidden">
+    <div class="text-white/50 hover:text-white hover:cursor-pointer active:text-white/50">
+        <i class="fa-regular fa-circle-right w-10 h-10"></i>
+    </div>
+</div>
+<div class="flex flex-row w-full h-full bg-gray-900">
+    <!--Controls Div-->
+    <div id="controller-container"
+         class="w-96 px-4 flex-none h-[100vh] bg-gradient-to-b from-purple-300 to-purple-700 rounded-tr-3xl rounded-br-3xl flex flex-col gap-6 overflow-y-scroll scrollbar select-none">
+        <!-- hide controls button-->
+        <div class="mx-5 mt-5 flex justify-end">
+            <div class="w-full flex justify-center">
+                <span class="text-3xl text-black/60 font-semibold">
+                    PARTICLE IMAGE
+                </span>
+            </div>
+            <div id="hide-controls-button"
+                 class="text-black/50 hover:text-black/80 hover:cursor-pointer active:text-black/20">
+                <i class="fa-regular fa-circle-left w-10 h-10"></i>
+            </div>
+        </div>
+
+        <!--image box-->
+        <div id="image-box" class="mx-5 bg-gray-700 rounded-xl shadows">
+            <div class="px-5 py-4 flex flex-col gap-4">
+                <div>
+                    <h1 class="text-white text-center text-lg font-semibold">IMAGE</h1>
+                </div>
+                <div id="image-radios-container" class="flex flex-row">
+                    <div class="flex-1 text-base text-white flex">
+                        <input id="local-file-radio" class="w-4" type="radio" checked data-mode="file"
+                               name="image-radio-grp">
+                        <label for="local-file-radio" class="flex-auto ml-2">Local File</label>
+                    </div>
+                    <div class="flex-1 text-base text-white  flex">
+                        <input id="url-radio" class="w-4" type="radio" data-mode="url" name="image-radio-grp">
+                        <label for="url-radio" class="flex-auto ml-2">URL</label>
+                    </div>
+                </div>
+                <div class="bg-gray-800 rounded-lg flex flex-col gap-4 items-center p-4">
+                    <!-- file chooser-->
+                    <div id="file-chooser-container" class="text-base text-white w-full ">
+                        <label class="block mb-2 text-sm font-medium text-gray-300"
+                               for="image-input">Upload file</label>
+                        <input id="image-input"
+                               class="block w-full text-sm text-gray-400 bg-gray-700 rounded-lg border border-gray-600 cursor-pointer focus:outline-none"
+                               type="file" accept="image/*">
+                    </div>
+                    <!-- url input-->
+                    <div id="url-container" class="text-base text-white w-full hidden">
+                        <input id="image-url"
+                               class="block w-full px-2 h-8 text-sm text-gray-400 bg-gray-700 rounded-lg border border-gray-600  focus:outline-none"
+                               type="url" placeholder="Paste URL &#34;press enter&#34;">
+                        <label id="url-label" class="block ml-2 mt-2 text-sm font-medium text-green-500"
+                               for="image-url"></label>
+                    </div>
+                </div>
+                <div class="text-base text-white flex">
+                    <label for="image-size-slider" class="flex-auto">Size</label>
+                    <input id="image-size-slider" class="w-40" type="range" min="10" max="100" value="50">
+                </div>
+                <div class="text-base text-white flex">
+                    <label for="image-posX-slider" class="flex-auto">PositionX</label>
+                    <input id="image-posX-slider" class="w-40" type="range" min="1" max="50" value="25">
+                </div>
+                <div class="text-base text-white flex">
+                    <label for="image-posY-slider" class="flex-auto">PositionY</label>
+                    <input id="image-posY-slider" class="w-40" type="range" min="1" max="50" value="25">
+                </div>
+            </div>
+        </div>
+
+        <!--mode selection box-->
+        <div id="mode-box" class="mx-5 bg-gray-700 rounded-xl shadows">
+            <div class="px-5 py-4 flex flex-col gap-4">
+                <div>
+                    <h1 class="text-white text-center text-lg font-semibold">MODE</h1>
+                </div>
+                <div id="render-radios-container" class="flex flex-row">
+                    <div class="flex-1 text-base text-white flex">
+                        <input id="mouse-drag-radio" class="w-4" type="radio" data-mode="drag" checked
+                               name="mode-radio-grp">
+                        <label for="mouse-drag-radio" class="flex-auto ml-2">MouseDrag</label>
+                    </div>
+                    <div class="flex-1 text-base text-white  flex">
+                        <input id="particle-rain-radio" class="w-4" type="radio" data-mode="rain" name="mode-radio-grp">
+                        <label for="particle-rain-radio" class="flex-auto ml-2">Particle Rain</label>
+                    </div>
+                </div>
+
+                <div id="quality-container">
+                    <!-- separator-->
+                    <div class="mb-4 border-t-2 border-t-gray-800"></div>
+
+                    <div class="flex-1 text-base text-white flex justify-between">
+                        <label for="quality-slider" class="flex-none">Quality</label>
+                        <input id="quality-slider" class="w-24 appearance-none rounded-xl bg-gray-800 px-1" type="range"
+                               min="1" max="5" value="3">
+                        <label for="quality-slider" class="flex-none">Performance</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--rain box-->
+        <div id="rain-box" class="mx-5 bg-gray-700 rounded-xl shadows hidden">
+            <div id="rain-container" class="px-5 py-4 flex flex-col gap-4">
+                <div>
+                    <h1 class="text-white text-center text-lg font-semibold">RAIN</h1>
+                </div>
+                <div id="rain-radios-container" class="flex flex-row">
+                    <div class="flex-1 text-base text-white flex">
+                        <input id="full-rain-radio" class="w-4" type="radio"  data-mode="full" checked name="rain-radio-grp">
+                        <label for="full-rain-radio" class="flex-auto ml-2">Full</label>
+                    </div>
+                    <div class="flex-1 text-base text-white  flex">
+                        <input id="strips-radio" class="w-4" type="radio"  data-mode="strips" name="rain-radio-grp">
+                        <label for="strips-radio" class="flex-auto ml-2">Strips</label>
+                    </div>
+                </div>
+
+                <!-- strips radios-->
+                <div id="strips-radios-container" class="flex flex-col gap-2 bg-gray-800 px-4 py-2 rounded-lg hidden">
+                    <div class="flex-1 text-base text-white flex">
+                        <input id="horizontal-strip-radio" type="radio" data-mode="horizontal" checked name="strips-radio-grp">
+                        <label for="horizontal-strip-radio" class="flex-auto ml-2">Horizontal</label>
+                    </div>
+                    <div class="flex-1 text-base text-white  flex">
+                        <input id="vertical-strip-radio" type="radio" data-mode="vertical"  name="strips-radio-grp">
+                        <label for="vertical-strip-radio" class="flex-auto ml-2">Vertical</label>
+                    </div>
+                </div>
+
+                <!-- separator-->
+                <div class="border-t-2 border-t-gray-800"></div>
+
+                <div class="text-base text-white flex">
+                    <label for="rain-amount-slider" class="flex-auto">Amount</label>
+                    <input id="rain-amount-slider" class="w-40" type="range" min="0" max="40" value="20">
+                </div>
+                <div class="text-base text-white flex">
+                    <label for="rain-velocityX-slider" class="flex-auto">VelocityX</label>
+                    <input id="rain-velocityX-slider" class="w-40 appearance-none rounded-xl bg-gray-800 px-1"
+                           type="range"
+                           min="-50" max="50" value="30"></div>
+                <div class="text-base text-white flex">
+                    <label for="rain-velocityY-slider" class="flex-auto">VelocityY</label>
+                    <input id="rain-velocityY-slider" class="w-40 appearance-none rounded-xl bg-gray-800 px-1"
+                           type="range"
+                           min="-50" max="50" value="30"></div>
+            </div>
+        </div>
+
+        <!--distortion box-->
+        <div id="distortion-box" class="mx-5 bg-gray-700 rounded-xl shadows">
+            <div class="px-5 py-4 flex flex-col gap-4">
+                <div>
+                    <h1 class="text-white text-center text-lg font-semibold">DISTORTION</h1>
+                </div>
+                <div id="dist-radios-container" class="flex flex-row">
+                    <div class="flex-1 text-base text-white  flex">
+                        <input id="attract-radio" class="w-4" type="radio" data-mode="attraction" name="distortion-radio-grp">
+                        <label for="attract-radio" class="flex-auto ml-2">Attraction</label>
+                    </div>
+                    <div class="flex-1 text-base text-white flex">
+                        <input id="repel-radio" class="w-4" type="radio" data-mode="repulsion" checked name="distortion-radio-grp">
+                        <label for="repel-radio" class="flex-auto ml-2">Repulsion</label>
+                    </div>
+                </div>
+                <!-- separator-->
+                <div class="border-t-2 border-t-gray-800"></div>
+                <div class="text-base text-white flex">
+                    <label for="dist-radius-slider" class="flex-auto">Radius</label>
+                    <input id="dist-radius-slider" class="w-40" type="range" min="10" max="150" value="80">
+                </div>
+                <div class="text-base text-white flex">
+                    <label for="dist-speed-slider" class="flex-auto">Speed</label>
+                    <input id="dist-speed-slider" class="w-40" type="range" min="2" max="20" value="10">
+                </div>
+                <div id="retain-container" class="text-base text-white flex">
+                    <label for="retain-speed-slider" class="flex-auto">Retain</label>
+                    <input id="retain-speed-slider" class="w-40" type="range" min="0" max="10" value="5">
+                </div>
+            </div>
+        </div>
+
+        <!--trails box-->
+        <div id="trails-box" class="mx-5 bg-gray-700 rounded-xl shadows mb-10">
+            <div class="px-5 py-4 flex flex-col gap-4">
+                <div>
+                    <h1 class="text-white text-center text-lg font-semibold">TRAILS</h1>
+                </div>
+                <div class="text-base text-white">
+                    <input id="trails-checkbox" type="checkbox">
+                    <label for="trails-checkbox" class="ml-2">Trails</label>
+                </div>
+                <div id="trails-amount-box" class="text-base text-white flex disable">
+                    <label for="trails-amount-slider" class="flex-auto">Amount</label>
+                    <input id="trails-amount-slider" class="w-40" type="range" min="1" max="10" value="5">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--Canvas Div-->
+    <div id="canvas-container" class="w-full h-[100vh]">
+        <canvas id="canvas" class="bg-[#111827]"></canvas>
+    </div>
+</div>
+<script type="module" src="/src/controller.js"></script>
+</body>
+</html>
